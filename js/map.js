@@ -220,7 +220,7 @@ function load_map_components(){
        console.log(projects_in_city);
        if(projects_in_city.length > 1){
          // console.log("bigger");
-         $("#multi_title").text("Multiple Projects in " + city);
+         $("#multi_title").html("Multiple Projects in " + city + "<span onclick=\"hide_text(1)\"style=\"float:right;cursor:pointer;\"><h1>X</h1></span>");
 
          var str = "";
          for(var i = 0; i < projects_in_city.length; i++){
@@ -323,7 +323,7 @@ function show_project(proj_id){
       d = mock_data[i];
     }
   }
-  document.getElementById('project_title').innerHTML = d.survey_answers.project_title;
+  document.getElementById('project_title').innerHTML = d.survey_answers.project_title + "<span onclick=\"hide_text(0)\"style=\"float:right;cursor:pointer;\"><h1>X</h1></span>";
   document.getElementById('project_subtitle').innerHTML = d.survey_answers.project_type;
   document.getElementById('project_leader').innerHTML = d.survey_answers.project_organization;
   document.getElementById('budget').innerHTML = d.survey_answers.budget.funded;

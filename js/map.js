@@ -149,7 +149,7 @@ function project_transform(t) {
 
 function load_map_components(){
   // var q = d3.queue();
-  d3.json("/data/cities_updated.json", function(error,data){
+  d3.json("data/cities_updated.json", function(error,data){
     cities = data;
     cities_circles = cities_container.selectAll("circle")
        .data(cities).enter()
@@ -180,7 +180,7 @@ function load_map_components(){
         }
   });
 
-  d3.json("/data/mock-data.json", function(error,data){
+  d3.json("data/mock-data.json", function(error,data){
     mock_data = data.data;
 
     console.log(data.data);
@@ -250,7 +250,7 @@ function load_map_components(){
 
      }
   });
-  d3.json('/data/europe.topo.json', function(error, europe){
+  d3.json('data/europe.topo.json', function(error, europe){
     g.selectAll(".continent_Europe_subunits")
       .data(topojson.feature(europe, europe.objects.continent_Europe_subunits).features)
         .enter().append("path")
@@ -273,7 +273,7 @@ function load_map_components(){
       };
       }
   });
-  d3.json("/data/sweden.topo.json", function(error, sweden) {
+  d3.json("data/sweden.topo.json", function(error, sweden) {
 
     g.selectAll(".subunit")
         .data(topojson.feature(sweden, sweden.objects.subunits).features)

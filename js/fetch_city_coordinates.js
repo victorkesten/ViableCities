@@ -99,11 +99,18 @@ var list_of_cities = [
 ];
 var cities_formatted;
 var q = d3.queue();
-
+var qt = d3.queue();
 function fetch_cities(){
+    qt.defer(d3.csv,"data/tätorter.csv")
 
+    qt.awaitAll(function(error, data_list){
+        // console.log(data_list);
+      for(var i = 0; i < data_list[0].length; i++){
+        list_of_cities[i] = data_list[0][i].ort;
+      }
+      queue_master();
+    });
     // var i = 0;
-    queue_master();
 
 }
 var time = 0;
@@ -132,6 +139,9 @@ function queue_master(){
 
 function map_data(rawData){
   var mynodes = rawData.map(function (d,i){
+    if(d.status.match("ZERO_RESULTS")){
+      return;
+    }
     return {
       id : i,
       radius : 15,

@@ -17,7 +17,8 @@ svg {
 #nav_bar_top{
   /* background-color: #5c5b97; */
   /* background-color: #007d91!important; */
-  background-color: #00A389!important;
+  /* background-color: #00A389!important; */
+  background-color: #D9852D!important;
 
   /* height: 7vh; */
   /* height: 10%; */
@@ -25,13 +26,6 @@ svg {
 /* body {background-color: grey;} */
 /* svg {background-color: white;} */
 
-.node--0 {
-  display: none;
-}
-
-.node--1 {
-  display:none;
-}
 
 .view{
   cursor: pointer;
@@ -49,14 +43,15 @@ svg {
   left:40%;
 }
 
-.project_collection{fill:red;}
-
-/* #info_box_col{background-color:orange;} */
-
-.flare_module{
-  /* stroke: #fff; */
+#card_body_ {
+  max-height: 380px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
+::-webkit-scrollbar{
+  width:10px;
+}
 .tooltip_bubble {
     position: absolute;
     text-align: center;
@@ -71,5 +66,21 @@ svg {
     /* background: white; */
     /* border: 1px solid black; */
     /* border-radius: 3px; */
+    pointer-events: none;
+}
+
+
+.tooltip_bubble2 {
+    position: absolute;
+    text-align: center;
+    top:0;
+    /* width: 60px; */
+    /* height: 28px; */
+    padding: 2px;
+    font: 12px sans-serif;
+    /* background: lightsteelblue; */
+    background: white;
+    border: 1px solid black;
+    border-radius: 3px;
     pointer-events: none;
 }

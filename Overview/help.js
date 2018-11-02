@@ -41,6 +41,25 @@ var omrade_titles_y = {
   2:50
 };
 
+
+var projspace_title_x = {
+  0: 410,
+  1: 750
+};
+
+var projspace_title_y = {
+  0: 35,
+  1: 100
+};
+
+var projectSpace = {
+  0 : 415,
+  1 : 680
+};
+
+var projspace_title = {};
+
+var project_no = -1;
 var bubbles = null;
 var nodes;
 var zoom = d3.zoom()
@@ -87,11 +106,13 @@ var simulation = d3.forceSimulation()
 
 function createNewNodes(rawData){
   var myNodes = rawData.map(function (d,i){
+    // console.log(d);
     return {
       id: (i),
       radius : 15,
       organisation: d.Organisation,
       value: Math.random() * 10,
+      projects : d.Projects,
       kategori:convert_omrade(d.Kategori),
       x: Math.random() * 900,
       y: Math.random() * 800
@@ -133,13 +154,14 @@ function chart(rawData) {
 
   bubbles.transition()
     .duration(2000)
-    .attr('r', function (d) { console.log(d.radius); return d.radius; });
+    .attr('r', function (d) { return d.radius; });
 
   // Start simulation
   simulation.nodes(nodes);
   move_bubbles(0);
 
   create_omrade_titles();
+  create_project_titles();
 
   function handleMouseOverCircle(d){
     var id = d.id;
@@ -169,6 +191,8 @@ function move_bubbles(opt){
     simulation.force('x', d3.forceX().strength(forceStrength).x(center.x));
   } else if (opt == 1){
     simulation.force('x', d3.forceX().strength(forceStrength).x(omrade_view));
+  } else if (opt == 2){
+    simulation.force('x', d3.forceX().strength(forceStrength).x(project_view));
   }
   simulation.alpha(1).restart();
   toggle_title();
@@ -182,27 +206,53 @@ function change_view(option){
 }
 
 function omrade_view(d){
-
   return omradeCenters[d.kategori].x;
+}
+
+function project_view(d){
+  // console.log(d);
+  var projs = d.projects;
+  // console.log(projs);
+  for(var i = 0; i< projs.length; i++){
+    if(projs[i] == project_no){
+      // console.log("check");
+      return projectSpace[1];
+    }
+  }
+  return projectSpace[0];
 }
 
 function start_program(){
   var q = d3.queue();
-  q.defer(d3.csv, "data.csv");
+  q.defer(d3.json, "data.json");
+  q.defer(d3.json, "mock-data-v5.json");
 
   q.awaitAll(function(error, data_list){
     if(error) throw error;
-    console.log(data_list);
-    // var no = createNewNodes(data_list[0]);
+    var str = ""
+    // console.log(data_list[1].data);
+    projspace_title[0] = "Partners";
+    for(var i = 0; i < data_list[1].data.length; i++){
+      projspace_title[data_list[1].data[i].survey_answers.project_id] = data_list[1].data[i].survey_answers.project_title;
+      str += "<a class=\"dropdown-item\" onclick=\"change_view_spec(2,"+data_list[1].data[i].survey_answers.project_id+")\" href=\"#\">" + data_list[1].data[i].survey_answers.project_title  + "</a>\n";
+    }
+    $("#dropdown_menu").html(str);
     chart(data_list[0]);
-    // console.log(no);
-
   });
-  // question_omrade = o;
-  // meet_info = t;
-  // prepare_meetings(t);
 }
 
+function change_view_spec(opt, proj_opt){
+  $("#view_"+view_option).removeClass("active");
+  $("#view_"+opt).addClass("active");
+  view_option = opt;
+  project_no = proj_opt;
+  d3.select("#proj_text_change").text(projspace_title[project_no]);
+  move_bubbles(opt);
+}
+
+// function combine_data(comp, dat){
+//   $("#texta").text(JSON.stringify(comp));
+// }
 
 function create_omrade_titles(){
   var omradeData = d3.keys(omrade_titles);
@@ -218,13 +268,39 @@ years.enter().append('text')
   .text(function (d) { return omrade_titles[d]; });
 }
 
+function create_project_titles(){
+  var temp_str = {0 : "Partners", 1: "temp"};
+  var projData = d3.keys(temp_str);
+  var years = g.selectAll('.projTitles')
+  .data(projData);
+
+years.enter().append('text')
+  .attr('class', 'projTitles')
+  .attr('display','none')
+  .attr('x', function (d) { return projspace_title_x[d]; })
+  .attr('y', function(d){  return projspace_title_y[d];})
+  .attr('text-anchor', 'middle')
+  .text(function (d) { return temp_str[d]; })
+  .filter(function (d){
+    if(d == 1){
+      return true;
+    }
+    return false;
+  })
+  .attr("id","proj_text_change");
+}
+
 function toggle_title(){
   if(view_option == 1){
-    console.log(view_option);
+    // console.log(view_option);
     $(".omradeTitles").css("display","initial");
-    // d3.selectAll(".omradeTitles")
   } else {
     $(".omradeTitles").css("display","none");
+  }
+  if(view_option == 2){
+    $(".projTitles").css("display","initial");
+  } else {
+    $(".projTitles").css("display","none");
   }
 }
 

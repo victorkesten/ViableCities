@@ -34,11 +34,22 @@
               <!-- <a class="nav-link" onclick="change_view(4)">Frågor</a> -->
             </li>
           </ul>
+          <div class="dropdown" id="project_dropdown">
+            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Projects
+            </button>
+          <div class="dropdown-menu dropdown-menu-right" id="dropdown_menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+          </div>
     </div>
   </div>
 
     <svg id="bubbles_svg_area"></svg>
   </body>
+  <div id="texta"></div>
   <script src="jquery-3.2.1.min.js"></script>
   <script src="bootstrap/bootstrap.min.js"></script>
   <script src="d3.v4.min.js"></script>

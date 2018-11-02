@@ -163,6 +163,8 @@ function chart(rawData) {
   create_omrade_titles();
   create_project_titles();
 
+  create_legend();
+
   function handleMouseOverCircle(d){
     var id = d.id;
     this.parentNode.appendChild(this);
@@ -319,5 +321,64 @@ function mote_color(d){
   }
   return "black";
 }
+
+function legend_color(d){
+  if(d == 0){
+    return "rgb(0,125,145)";
+  } else if (d == 1){
+    return "#EA9A00";
+  } else if (d == 2){
+    return "#00A389";
+  } else if (d == 3){
+    return "#97C28E";
+  }
+  return "black";
+}
+
+function create_legend(){
+
+  var t = svg.append("g")
+  .classed('legend','true')
+  // .attr('x',50);
+  var spec_height = height + 100;
+  var width_s = 80
+  var extra_width = 30;
+  var xt = t.selectAll('.legend')
+    .data(d3.keys(omrade_titles));
+
+  xt.enter().append('rect')
+    .attr('width','10')
+    .attr('height','10')
+    .attr('x', function(d){
+      return  (d*width_s) + extra_width + 50;
+    })
+    .attr('y',spec_height)
+    .attr('fill',function(d){
+      return legend_color(q_o[omrade_titles[d]]);
+    })
+    .classed('legend_rect','true');
+    // .text("hello");
+    xt.enter().append('text')
+    .attr('x', function(d){
+      if(d == 0){
+        return (d*width_s) + extra_width + 92;
+      }
+      if(d == 1){
+        return d*width_s+extra_width +86;
+      }
+      if(d == 2){
+        return d*width_s+extra_width + 86;
+      }
+      return  d*width_s+extra_width + 110;
+    })
+    .attr('y',spec_height + 8)
+    .text(function(d){
+      return omrade_titles[d];
+    });
+}
+
+// <div class="legend">
+//   <rect></rect>
+// </div>
 
 start_program();

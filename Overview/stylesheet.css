@@ -54,3 +54,15 @@ html, body{
   overflow-y: scroll;
   overflow-x: hidden;
 }
+
+.legend {
+  width: 200px;
+  height: 50px;
+  background-color: orange;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+.legend_rect {
+  
+}

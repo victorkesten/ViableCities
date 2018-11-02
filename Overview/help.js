@@ -3,14 +3,14 @@ var height = 400;
 
 
 var omrade_titles = {
-  0: "Civilsamhällesorganisation",
+  0: "Civilsamhälle",
   1: "Forskning",
   2: "Näringsliv",
   3: "Offentlig verksamhet"
 };
 
 var q_o = {
-   "Civilsamhällesorganisation" : 0,
+   "Civilsamhälle" : 0,
    "Forskning" : 1,
    "Näringsliv": 2,
    "Offentlig verksamhet": 3
@@ -44,7 +44,7 @@ var omrade_titles_y = {
 
 var projspace_title_x = {
   0: 410,
-  1: 750
+  1: 800
 };
 
 var projspace_title_y = {
@@ -54,7 +54,7 @@ var projspace_title_y = {
 
 var projectSpace = {
   0 : 415,
-  1 : 680
+  1 : 730
 };
 
 var projspace_title = {};
@@ -262,6 +262,7 @@ function create_omrade_titles(){
 years.enter().append('text')
   .attr('class', 'omradeTitles')
   .attr('display','none')
+  .attr('font-size','20px')
   .attr('x', function (d) { return omrade_titles_x[d]; })
   .attr('y', function(d){  return omrade_titles_y[d];})
   .attr('text-anchor', 'middle')
@@ -277,6 +278,7 @@ function create_project_titles(){
 years.enter().append('text')
   .attr('class', 'projTitles')
   .attr('display','none')
+  .attr('font-size','20px')
   .attr('x', function (d) { return projspace_title_x[d]; })
   .attr('y', function(d){  return projspace_title_y[d];})
   .attr('text-anchor', 'middle')
@@ -287,6 +289,7 @@ years.enter().append('text')
     }
     return false;
   })
+  .attr('font-size','12px')
   .attr("id","proj_text_change");
 }
 

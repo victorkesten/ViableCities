@@ -6,6 +6,8 @@ var cities;
 var width = 800,
     height = 535;
 
+var pic_name = ["","1. Aktivitetsbaserad modellering.png",". DDS energieffektiv vård.jpg","3. Digitalt kontrollerade odlingssystem.jpg", "4.  Effektiv energiplanering.jpg", "5. Hotmodellering.jpg","6. Hållbara_urbana_livstillar.jpg","7. KlimakampelUppsala.jpg", "8. Ladda_lagra_länka.png", "9. MERiT.jpg", "10. Mo-Bo.jpg", "11. Mått och steg.jpg", "12. SAMIR.jpg", "13. Sensorer för luftmiljö.jpg", "14. R_energi.JPG", "15. Sharing Cities Sweden.jpg", "16. Matbutik.jpg", "17. Smart Village.png", "18. Småskalig elförsörjning.jpg", "19. Urban ICT Arena.jpg", "20. Värdeskapande med öppna data.jpg", "21. 3De.jpg"];
+
 var zoom = d3.zoom()
     .scaleExtent([1, 100])
     .on("zoom.foo", zoomed2)
@@ -319,12 +321,15 @@ function load_map_components(){
        if(d.survey_answers.group == 0){
          $("#info_box_col").css("display","initial");
          // d3.select("#card_budget").enter()
+         var proj_id = d.survey_answers.project_id;
          document.getElementById('project_title').innerHTML = d.survey_answers.project_title;
          document.getElementById('project_subtitle').innerHTML = d.survey_answers.project_type;
          document.getElementById('project_leader').innerHTML = d.survey_answers.project_organization;
          document.getElementById('project_contact').innerHTML = "<a href='mailto:"+d.survey_answers.project_manager_email+"'>"+d.survey_answers.project_manager+"</a>";
 
          document.getElementById('budget').innerHTML = d.survey_answers.budget.funded;
+         document.getElementById('proj-pic').innerHTML = "<img src=\'resources/thumbnails/"+pic_name[proj_id]+"\' />";
+
          var dates = d.survey_answers.dates.start + " - "+ d.survey_answers.dates.end;
          document.getElementById('project_time').innerHTML = dates;
 

@@ -558,6 +558,34 @@
         "dates": { "start": "2018-08-31", "end": "2019-08-30" },
         "description": "För den multifunktionella staden är trenden idag i Sverige att arbeta med tredimensionell fastighetsindelning (3D) för att inrymma flera ägare och många funktioner i samma byggnad. Detta skapar både möjligheter och utmaningar för energioptimering (e). Vi kan i teorin skapa positiva energiblock där samma kvarter delar energiflöden men i praktiken är dock detta outvecklat både inom teknik, policy och affärsmodeller\n\nVi vill i en nära trippelhelix-samverkan öka affärsdrivet och korta kopplingarna mellan forskning och praktik genom att i tre stadsutvecklingsprojekt föra samman forskare med kravställare samt genomförare. I förstudien skall vi driva arbetet i parallella processer där vi identifierar möjligheter och utmaningar inom policys och krav för styrning, samt metoder och modeller för genomförande. Vi skall även identifiera nätverk och aktörer med liknande agenda som vi så att vi i slutfasen av förstudien kan rigga ett starkt konsortium som kan ta utmaningarna med 3De in i framtiden."
       }
+    },
+    {
+      "survey_answers": {
+        "budget": { "funded": 51441000, "total_cost": 117000000 },
+        "project_id": "22",
+        "project_type": "Innovationsprojekt",
+        "ratio_funded": 0.43,
+        "project_title": "Sharing Cities Sweden",
+        "focus_lifestyle": [],
+        "focus_planning": [],
+        "focus_mobility": [],
+        "focus_infrastructure": [],
+        "project_organization": "Lunds universitet",
+        "location" : "Lund",
+        "keywords": [
+            "Delningsekonomi", "konsumtion", "affärsmodeller", "testbädd"
+        ],
+        "other_financiers": [
+            "Älvstranden Utveckling AB", "Göteborg Energi AB", "Göteborgs kommun", "Riksbyggen ek för"
+        ],
+        "other_recipients": [
+            "Chalmers Tekniska Högskola AB", "Rise Research Institutes Of Sweden AB", "Riksbyggen ek för"
+        ],
+        "project_manager": "Kes McCormick",
+        "project_manager_email": "",
+        "dates": { "start": "2017-08-1", "end": "2020-12-31" },
+        "description": "Ett nationellt program för delningsekonomi i städer. Programmet löper från augusti 2017 till december 2020 och syftar till att sätta Sverige på kartan som ett land som aktivt och kritiskt arbetar med delningsekonomi i städer. Målen med programmet är att: Utveckla världsledande testbäddar för delningsekonomi i Stockholm, Göteborg, Malmö och Umeå. Utveckla en nationell nod, i syfte att stärka den nationella (och internationella) samverkan och främja ett gott erfarenhetsutbyte. Genom testbäddar i fyra städer ska delningstjänster och digitala lösningar/plattformar utvecklas. Delningsekonomins möjligheter och risker ska testas och utvärderas. Testbäddarna kompletteras med en nationell nod för koordination, nationellt lärande samt internationellt utbyte. Programmet genomförs i samverkan mellan näringsliv, offentlig sektor, universitet och institut. Syftet är att stärka Sveriges arbete för de globala hållbarhetsmålen, samt att stärka Sveriges konkurrenskraft genom att utveckla nya tjänster och nya företag för hemmamarknad och exportmarknader. Testbäddarna kommer att utveckla delningstjänster med koppling främst till 1) samutnyttjande av ytor (lokaler, boende, grönstruktur, delade offentliga rum etc.), samt 2) samutnyttjande av varor och tjänster (verktyg, kläder, leksaker, hantverk etc.). Transporter och mobilitet ingår också i viss utsträckning. Delningstjänsterna skall bidra till en minskad energi- och klimatpåverkan och en hållbar utveckling men också till att främja en social hållbar utveckling i staden. Delningstjänsterna ska vara innovativa samt bidra till en stor bredd av olika typer av tjänster inom programmet. Programmet är en del av Viable Cities och finansieras av Vinnova. Se programmets webbplats sharingcities.se för mer information."
+      }
     }
   ]
 }

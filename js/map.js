@@ -389,11 +389,13 @@ function load_map_components(){
         .attr("d", path)
         .attr("fill",function(d){
           if(d.properties.NAME.match("Sweden")){
-            return "#00A389";
+            // return "#00A389";
+            return "grey";
             // return "#669966";
           }
           // return "#cdc";
-          return "#97C28E"
+          // return "#97C28E"
+          return "lightgrey";
         });
 
   g.insert("path", ".graticule")

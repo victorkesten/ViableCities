@@ -292,7 +292,7 @@ function load_map_components(){
          return 3 + a;
        })
        .classed("bubble","true")
-       .style("stroke-width", .5)
+       .style("stroke-width", 2)
        // .style("stroke", "#000")
        .style("stroke","#bb7b00")
        .attr("fill", function(d){

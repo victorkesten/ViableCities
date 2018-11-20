@@ -3,7 +3,7 @@
 
 //https://www.gps-coordinates.net/
 var cities;
-var width = 800,
+var width = 800;
     height = 535;
 
 var pic_name = ["","1. Aktivitetsbaserad modellering.png",". DDS energieffektiv vård.jpg","3. Digitalt kontrollerade odlingssystem.jpg", "4.  Effektiv energiplanering.jpg", "5. Hotmodellering.jpg","6. Hållbara_urbana_livstillar.jpg","7. KlimakampelUppsala.jpg", "8. Ladda_lagra_länka.png", "9. MERiT.jpg", "10. Mo-Bo.jpg", "11. Mått och steg.jpg", "12. SAMIR.jpg", "13. Sensorer för luftmiljö.jpg", "14. R_energi.JPG", "15. Sharing Cities Sweden.jpg", "16. Matbutik.jpg", "17. Smart Village.png", "18. Småskalig elförsörjning.jpg", "19. Urban ICT Arena.jpg", "20. Värdeskapande med öppna data.jpg", "21. 3De.jpg"];
@@ -127,6 +127,12 @@ var tooltip2 = d3.select("body").append("div")
     .attr("class", "tooltip_bubble2")
     .style("opacity", 0);
 
+var tooltip3 = d3.select("body").append("div")
+    .attr("class", "tooltip_bubble3")
+    .attr("id","tooltip_bubble3")
+    .style("opacity", 0);
+
+var tooltip3_showed =0 ;
 
 function zoomed() {
   g.attr("transform",  d3.event.transform);
@@ -144,7 +150,7 @@ function circle_size_increase(d){
   // console.log(this);
   // use THIS
   //-21776
-  var i = d3.interpolateNumber(1, 20);
+  var i = d3.interpolateNumber(2, 20);
   var x = (d3.event.transform.y * -1)-2000;
   // console.log(x);
   if(x > 0){
@@ -154,18 +160,22 @@ function circle_size_increase(d){
     // console.log(d);
     // return
   }
-  return 1;
+  return 2;
 }
 
 function project_size_increase(d){
   //-21776
-  var i = d3.interpolateNumber(4, 70);
+  var city = d.survey_answers.location;
+  var a = project_count_city[city];
+  var i = d3.interpolateNumber(3+a, 70);
   var x = (d3.event.transform.y * -1)-1000;
   if(x > 0){
     var t = x/21776;
     return i(t);
   }
-  return 3;
+  var city = d.survey_answers.location;
+  var a = project_count_city[city];
+  return 3 + a;
 }
 
 function circle_transform(t) {
@@ -207,7 +217,7 @@ function project_transform(t) {
 
 function load_map_components(){
   // var q = d3.queue();
-  d3.json("data/cities_updated2.json", function(error,data){
+  d3.json("data/cities_updated.json", function(error,data){
     var up_d = [];
     var t = 0;
     for(var i = 0; i < data.length; i++){
@@ -225,7 +235,7 @@ function load_map_components(){
        .attr("cy", function (d) { return projection([d.coordinates.x, d.coordinates.y])[1]; })
        // .attr("cy","0")
        // .attr("cx","0")
-       .attr("r", "1")
+       .attr("r", 2)
        .style("stroke-width", .2)
        .style("stroke", "#000")
        .attr("fill", function(d){
@@ -238,7 +248,7 @@ function load_map_components(){
 
 
        function handleMouseOverCircle(d){
-         tooltip.transition().style("opacity", .9);
+         tooltip.transition("check3").style("opacity", .9);
          tooltip.html("<b>"+d.name + "</b>")
            .style("left", (d3.event.pageX) + "px")
            .style("top", (d3.event.pageY - 28) + "px")
@@ -249,7 +259,7 @@ function load_map_components(){
           tooltip.transition().style("opacity", 0);
         }
   });
-  d3.json("data/mock-data-v5.json", function(error,data){
+  d3.json("data/mock-data-v7.json", function(error,data){
     mock_data = data.data;
     console.log(data.data);
 
@@ -277,16 +287,18 @@ function load_map_components(){
        .attr("cx", function (d) { var c = project_coordinates[d.survey_answers.location]; return projection([c.x,c.y])[0];})
        .attr("cy", function (d) { var c = project_coordinates[d.survey_answers.location]; return projection([c.x,c.y])[1];})
        .attr("r", function(d){
-         // if(d.survey_answers.group)
-         return 3;
+         var city = d.survey_answers.location;
+         var a = project_count_city[city];
+         return 3 + a;
        })
        .classed("bubble","true")
        .style("stroke-width", .5)
-       .style("stroke", "#000")
+       // .style("stroke", "#000")
+       .style("stroke","#bb7b00")
        .attr("fill", function(d){
-        if(project_count_city[d.survey_answers.location]>1){
-          return "purple";
-        }
+        // if(project_count_city[d.survey_answers.location]>1){
+        //   return "purple";
+        // }
          return "#EA9A00";
        })
        .on('click',handleClick)
@@ -299,24 +311,6 @@ function load_map_components(){
        var projects_in_city = [];
        var city = d.survey_answers.location;
        var old_cx_values = [];
-
-
-      var siblings = project_circles.filter(function(d, i){
-        if(d.survey_answers.location.match(city)){
-          d3.select(this)
-            .classed("open","true");
-          return true;
-        }
-        return false;
-      })
-      .transition()
-      .attr("cx",function(d,i){
-        var c = 2*i;
-        var cf = project_coordinates[d.survey_answers.location];
-        cf =  projection([cf.x,cf.y])[0];
-        return cf+c;
-      })
-      .attr("fill","#EA9A00");
 
        if(d.survey_answers.group == 0){
          $("#info_box_col").css("display","initial");
@@ -345,17 +339,34 @@ function load_map_components(){
            document.getElementById('card_webesite_link').innerHTML = d.survey_answers.website;
          }
        }
-       for(var i = 0; i < mock_data.length; i++){
-         if(mock_data[i].survey_answers.location.match(city)){
-           mock_data[i].survey_answers.group = 0;
+
+       if(d.survey_answers.group == 1){
+         var tx = "<b>Projects</b><button onclick=\"console.log(5);\">hello</button><br><ol type='1'>";
+
+         for(var i = 0; i < mock_data.length; i++){
+           if(mock_data[i].survey_answers.location.match(city)){
+             tx +=  "<li onclick=\"crash();\">"+mock_data[i].survey_answers.project_title +"</li>";
+           }
          }
+        tx +="</ol>";
+         tooltip3.transition().style("opacity", 1);
+         tooltip3.html(tx)
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY - 28) + "px");
+         tooltip3_showed = 1;
+            // .style("max-width",  200 + "px");
        }
+       // for(var i = 0; i < mock_data.length; i++){
+       //   if(mock_data[i].survey_answers.location.match(city)){
+       //     mock_data[i].survey_answers.group = 0;
+       //   }
+       // }
      }
 
      function handleMouseOverCircle(d){
        var tx = ""
        if(project_count_city[d.survey_answers.location]>1 && d.survey_answers.group == 1){
-         tx = "Click to see projects"
+         tx = "<b>"+ d.survey_answers.location +"</b><br>Click to see projects"
        } else{
          tx = "<b>" + d.survey_answers.location +"</b>\n<br>" + d.survey_answers.project_title;
        }
@@ -367,17 +378,17 @@ function load_map_components(){
      }
 
      function handleMouseOutCircle(d){
-        tooltip2.transition().style("opacity", 0);
+        tooltip2.transition("check").style("opacity", 0);
       }
   });
   d3.json('data/europe.topo.json', function(error, europe){
     g.selectAll(".continent_Europe_subunits")
-      .data(topojson.feature(europe, europe.objects.continent_Europe_subunits).features)
+      .data(topojson.feature(europe, europe.objects.europe).features)
         .enter().append("path")
         .attr("class", function(d) {return "country-" + d.id;})
         .attr("d", path)
         .attr("fill",function(d){
-          if(d.properties.geounit.match("Sweden")){
+          if(d.properties.NAME.match("Sweden")){
             return "#00A389";
             // return "#669966";
           }
@@ -385,54 +396,11 @@ function load_map_components(){
           return "#97C28E"
         });
 
-    g.append("path")
-        .attr("stroke", "black")
-        // .attr("fill","#cdc")
-        // .attr("fill","#cdc")
-        .attr("fill","#97C28E")
-        .attr("stroke-width", 0.2)
-        .attr("d", path(topojson.mesh(europe, europe.objects.continent_Europe_subunits, border)));
-     function border(id0, id1) {
-       if(id0.properties.geounit.match("Sweden")){
-         return;
-       }
-      return function(a, b) {
-        return a.id === id0 && b.id === id1
-            || a.id === id1 && b.id === id0;
-        return true;
-      };
-      }
-  });
-  d3.json("data/sweden.topo.json", function(error, sweden) {
-    g.selectAll(".subunit")
-        .data(topojson.feature(sweden, sweden.objects.subunits).features)
-        .enter().append("path")
-          .attr("class", function(d) {return "subunit-" + d.geounit;})
-          .attr("d", path)
-          // .attr("fill","#669966");
-          .attr("fill","#00A389");
-          // .attr("fill","#97C28E");
-          // return "#97C28E";
+  g.insert("path", ".graticule")
+  .datum(topojson.mesh(europe, europe.objects.europe, function(a, b) { return a !== b; }))
+  .attr("class", "boundary")
+  .attr("d", path);
 
-       g.append("path")
-           // .attr("stroke", "#404040")
-           // .attr("stroke", "#669966")
-           .attr("stroke","#00A389")
-           // .attr("fill"," #669966")
-           .attr("fill","#00A389")
-           // .attr("fill","#97C28E")
-           .attr("stroke-width", 0.2)
-           .attr("d", path(topojson.mesh(sweden, sweden.objects.subunits, borders)));
-
-     function borders(id0, id1) {
-       // console.log(id0);
-       // console.log(id1);
-      return function(a, b) {
-        // console.log(a);
-        return a.id === id0 && b.id === id1
-            || a.id === id1 && b.id === id0;
-      };
-    }
   });
 }
 
@@ -460,3 +428,52 @@ function show_project(proj_id){
   document.getElementById('budget').innerHTML = d.survey_answers.budget.funded;
 
 }
+
+var about_showed = 0;
+function toggle_about(a){
+  if(a == 0){
+    d3.select(".about_box")
+      .style("display","initial");
+    d3.select(".inner_content")
+      .classed("blurredElement",true);
+  } else if(a == 1) {
+    d3.select(".about_box")
+      .style("display","none");
+    d3.select(".inner_content")
+      .classed("blurredElement",false);
+  }
+  about_showed = a;
+}
+
+
+window.addEventListener('click', function(e){
+  if( about_showed == 1){
+    if (document.getElementById('about_box').contains(e.target)){
+      // Clicked in box
+    } else{
+      // Clicked outside the box
+      if(!document.getElementById('about_tog').contains(e.target) && about_showed == 0){
+        toggle_about(1);
+      }
+    }
+  }
+
+
+  if (document.getElementById('tooltip_bubble3').contains(e.target)){
+    // Clicked in box
+  } else{
+    // Clicked outside the box
+      // toggle_about(1);
+      // console.log(tooltip3_showed);
+      if(tooltip3_showed == 2){
+        tooltip3.transition("check2").style("opacity", 0);
+
+        tooltip3_showed = 0;
+      }
+      if(tooltip3_showed == 1){
+        tooltip3_showed = 2;
+
+      }
+    }
+
+});

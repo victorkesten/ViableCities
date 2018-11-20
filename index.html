@@ -8,6 +8,8 @@
 
 </head>
 <body>
+  <div class="inner_content" id="inner_content">
+
   <div id="nav_bar_top">
       <nav class="navbar navbar-expand-sm navbar-dark py-0">
         <a class="navbar-brand" href="#">Viable Cities</a>
@@ -24,34 +26,22 @@
               <a class="nav-link" onclick="change_view(1)">Matrix</a>
             </li>
             <li class="nav-item view" id="view_2">
-              <!-- <a class="nav-link" onclick="change_view(1)">Gantt</a> -->
+              <a class="nav-link" onclick="change_view(2)">Partners</a>
 
-              <!-- <a class="nav-link" onclick="change_view(2)">Fokus Områden</a> -->
-            </li>
-            <li class="nav-item view" id="view_3">
-              <!-- <a class="nav-link" onclick="(3)">Karta</a> -->
             </li>
           </ul>
-          <form class="form-inline my-md-0 py-0">
-            <!-- <input class="form-control py-0" id="search_bar" type="text" placeholder="Search..."> -->
-          </form>
+          <a target="_blank" id="about_tog"  class="mx-2" style="cursor:pointer; color:white;" onclick="toggle_about(0)" >
+            <!-- <button type="button" class="form-inline my-0 btn" aria-label="Left Align"> -->
+              About
+            <!-- </button> -->
+          </a>
         </div>
       </nav>
     </div>
-<div class="multi-proj" id="multi-proj">
-  <div class="card my-3">
-    <h4 class="card-title my-0" id="multi_title">Multiple Projects<span onclick="hide_text(1)"style="float:right;cursor:pointer;"><h6>x</h6></span></h4>
-    <hr>
-    <div class="card-body">
-      <div id="multi_proj_list">
-      </div>
-    </div>
-  </div>
-</div>
   <div class="container-fluid p-0">
     <div class="row m-0">
     <div class="col-12 p-0">
-      <svg></svg>
+      <svg id="svg_area"></svg>
       <div id="info_box_col" class="pl-0" style="position:absolute; top:0px;right:0px; display:none;">
         <div class="card my-1" style="width: 500px;">
           <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
@@ -119,8 +109,16 @@
     </div>
   </div>
   </div>
+</div>
 </body>
 <div class="texta"></div>
+<div id="about_box" class="about_box mx-2 my-2">
+  <h5 id="about_header" class="card-title mx-2 my-2">Om Projektet<span style="float:right;cursor:pointer;"><button type="button" class="close" aria-label="Close"><span onclick="toggle_about(1)"aria-hidden="true">&times;</span></button></span></h5>
+  <hr>
+  <p class='mx-2'>
+  Här skriver vi lite information om projektet och hur man använder verktyget
+</p>
+
 <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="js/lib/bootstrap/bootstrap.min.js"></script>
 <script src="//d3js.org/d3.v4.min.js" charset="utf-8"></script>

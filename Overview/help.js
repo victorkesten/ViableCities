@@ -145,14 +145,16 @@ function chart(rawData) {
     .attr('r', 0)
     .style("stroke","black")
     .style("fill",function(d){ return mote_color(d);})
-    .attr('stroke-width', 1)
+    // .attr
+    .attr('stroke-width', .2)
+    // .attr('box-shadow','2px 2px')
     .on("mouseover",handleMouseOverCircle)
     .on("mouseout",handleMouseOutCircle);
 
 
   bubbles = bubbles.merge(bubblesE);
 
-  bubbles.transition()
+  bubbles.transition("test")
     .duration(2000)
     .attr('r', function (d) { return d.radius; });
 
@@ -170,10 +172,10 @@ function chart(rawData) {
     this.parentNode.appendChild(this);
     d3.selectAll(".bubble")
       .filter(function(d){if(d.id==id){return false;}return true;})
-      .transition()
+      .transition("check")
         .style("opacity","0.3");
 
-    tooltip.transition().style("opacity", .9);
+    tooltip.transition("tick").style("opacity", .9);
     tooltip.html(d.organisation) //+ " " + omrade_titles[d.kategori])
       .style("left", (d3.event.pageX) + "px")
       .style("top", (d3.event.pageY - 28) + "px")
@@ -181,9 +183,9 @@ function chart(rawData) {
   }
 
   function handleMouseOutCircle(d){
-    tooltip.transition().style("opacity", 0);
+    tooltip.transition("t").style("opacity", 0);
     d3.selectAll(".bubble")
-      .transition()
+      .transition("plum")
         .style("opacity","1");
   }
 };
@@ -227,7 +229,7 @@ function project_view(d){
 function start_program(){
   var q = d3.queue();
   q.defer(d3.json, "data.json");
-  q.defer(d3.json, "mock-data-v5.json");
+  q.defer(d3.json, "/data/mock-data-v7.json");
 
   q.awaitAll(function(error, data_list){
     if(error) throw error;
@@ -380,5 +382,6 @@ function create_legend(){
 // <div class="legend">
 //   <rect></rect>
 // </div>
+
 
 start_program();

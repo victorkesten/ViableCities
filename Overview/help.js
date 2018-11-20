@@ -154,7 +154,7 @@ function chart(rawData) {
 
   bubbles = bubbles.merge(bubblesE);
 
-  bubbles.transition("test")
+  bubbles.transition()
     .duration(2000)
     .attr('r', function (d) { return d.radius; });
 
@@ -172,10 +172,10 @@ function chart(rawData) {
     this.parentNode.appendChild(this);
     d3.selectAll(".bubble")
       .filter(function(d){if(d.id==id){return false;}return true;})
-      .transition("check")
+      .transition()
         .style("opacity","0.3");
 
-    tooltip.transition("tick").style("opacity", .9);
+    tooltip.transition().style("opacity", .9);
     tooltip.html(d.organisation) //+ " " + omrade_titles[d.kategori])
       .style("left", (d3.event.pageX) + "px")
       .style("top", (d3.event.pageY - 28) + "px")
@@ -183,9 +183,9 @@ function chart(rawData) {
   }
 
   function handleMouseOutCircle(d){
-    tooltip.transition("t").style("opacity", 0);
+    tooltip.transition().style("opacity", 0);
     d3.selectAll(".bubble")
-      .transition("plum")
+      .transition()
         .style("opacity","1");
   }
 };

@@ -397,11 +397,11 @@ function load_map_components(){
           // return "#97C28E"
           return "lightgrey";
         });
-
-  g.insert("path", ".graticule")
-  .datum(topojson.mesh(europe, europe.objects.europe, function(a, b) { return a !== b; }))
-  .attr("class", "boundary")
-  .attr("d", path);
+  // 
+  // g.insert("path", ".graticule")
+  // .datum(topojson.mesh(europe, europe.objects.europe, function(a, b) { return a !== b; }))
+  // .attr("class", "boundary")
+  // .attr("d", path);
 
   });
 }

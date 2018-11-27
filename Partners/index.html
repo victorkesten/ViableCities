@@ -2,11 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Viable Cities Overview</title>
-    <link rel="stylesheet" type="text/css" href="stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <title>Viable Cities Viz - Partner View</title>
+    <link rel="stylesheet" type="text/css" href="bubbles.css">
+    <link rel="stylesheet" type="text/css" href="/libraries/css/bootstrap.min.css">
   </head>
-
   <body>
 
 <div id="nav_bar_top" >
@@ -26,13 +25,6 @@
             <li class="nav-item view" id="view_1">
               <a class="nav-link" onclick="change_view(1)">Helix Category</a>
             </li>
-
-            <li class="nav-item view" id="view_3">
-              <!-- <a class="nav-link" onclick="change_view(3)">Karta(?)</a> -->
-            </li>
-            <li class="nav-item view" id="view_4">
-              <!-- <a class="nav-link" onclick="change_view(4)">Frågor</a> -->
-            </li>
           </ul>
           <div class="dropdown" id="project_dropdown">
             <button class="btn btn-viable dropdown-toggle btn-sm mx-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -43,15 +35,15 @@
           </div>
     </div>
   </div>
-
     <svg id="bubbles_svg_area"></svg>
   </body>
-  <div id="texta"></div>
 
-  <script src="jquery-3.2.1.min.js"></script>
-  <script src="bootstrap/bootstrap.min.js"></script>
-  <script src="d3.v4.min.js"></script>
-  <script src="help.js"></script>
+  <script src="//d3js.org/d3.v4.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="/libraries/js/bootstrap/bootstrap.min.js"></script>
+  <script src="//d3js.org/d3.v4.min.js" charset="utf-8"></script>
+  <script src="bubbles.js"></script>
+
   <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

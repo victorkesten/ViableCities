@@ -3,20 +3,22 @@
 
 //https://www.gps-coordinates.net/
 var cities;
-var width = 800;
-    height = 535;
+// var width = 800;
+    // height = 535;
 
-var pic_name = ["","1. Aktivitetsbaserad modellering.png",". DDS energieffektiv vård.jpg","3. Digitalt kontrollerade odlingssystem.jpg", "4.  Effektiv energiplanering.jpg", "5. Hotmodellering.jpg","6. Hållbara_urbana_livstillar.jpg","7. KlimakampelUppsala.jpg", "8. Ladda_lagra_länka.png", "9. MERiT.jpg", "10. Mo-Bo.jpg", "11. Mått och steg.jpg", "12. SAMIR.jpg", "13. Sensorer för luftmiljö.jpg", "14. R_energi.JPG", "15. Sharing Cities Sweden.jpg", "16. Matbutik.jpg", "17. Smart Village.png", "18. Småskalig elförsörjning.jpg", "19. Urban ICT Arena.jpg", "20. Värdeskapande med öppna data.jpg", "21. 3De.jpg"];
+// var height = document.body.clientHeight;
+// var width = document.body.clientWidth;
+
+var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
 
 var zoom = d3.zoom()
     .scaleExtent([1, 100])
     .on("zoom.foo", zoomed2)
     .on("zoom.bar", zoomed);
 
-var tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip_bubble")
-    .style("opacity", 0);
-
+// Mercator projection is sensible for this project.
 var projection = d3.geoMercator()
     .rotate([5,-1])
     // .scale(950)
@@ -28,29 +30,23 @@ var projection = d3.geoMercator()
 var path = d3.geoPath()
     .projection(projection);
 
+// Base SVG element
 var svg = d3.select("svg")
     .attr("width", "100%")
     .attr("height", height)
-    // .append("rect")
-    // .attr("width", "100%")
-    // .attr("height", "100%")
-    // .attr("fill", "pink")
-    // .attr("fill","lightblue")
     .call(zoom);
-    // .append("g")
 
 
 var g = svg.append("g");                              // The map itself
-var cities_container = svg.append("g")
-          // .attr('width',"100%")
-          // .attr("height","100%")
-          .attr("class","circle_box");  // All corresponding circle_packings
-var projects = svg.append("g");
-var path_g = svg.append("g");
+var cities_container = svg.append("g")                // All the black dot cities
+          .attr("class","circle_box");
+var projects = svg.append("g");                       // All the projects + cities
 
-var cities_circles;
-var project_circles;
-var mock_data = {};
+
+var cities_circles;                                   // All cities as objects.
+var project_circles;                                  // All Projects as objects.
+var mock_data = {};                                   // All data.
+// An array of projects and their coordinates.
 var project_coordinates = {
   "Stockholm" : {
     "x" : 18.068580800000063,
@@ -115,155 +111,114 @@ var project_coordinates = {
   "Malmö" : {
     "x":13.003822,
     "y":55.604981
-  },
-  "N/A" : {
-    "x":18.068580800000063,
-    "y":59.32932349999999
   }
 };
+// Stores # of projects in all cities.
 var project_count_city = {};
 
+
+// Tooltip for cities popup.
+var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip_bubble")
+    .style("opacity", 0);
+
+// Tooltip for projects popup
 var tooltip2 = d3.select("body").append("div")
     .attr("class", "tooltip_bubble2")
     .style("opacity", 0);
 
+// Tooltip for multi-proj.
 var tooltip3 = d3.select("body").append("div")
     .attr("class", "tooltip_bubble3")
     .attr("id","tooltip_bubble3")
     .style("opacity", 0);
 
-var tooltip3_showed =0 ;
+var tooltip3_showed = 0;
 
+// Geometric zoom for map.
 function zoomed() {
   g.attr("transform",  d3.event.transform);
 }
 
+// Semantic zooming for projects/cities.
+// Individual transformations depending on attribute.
 function zoomed2(){
   cities_circles.attr("transform",circle_transform(d3.event.transform));
-  project_circles.attr("transform",project_transform(d3.event.transform));
+  project_circles.attr("transform",circle_transform(d3.event.transform));
+
   cities_circles.attr("r",circle_size_increase);
   project_circles.attr("r",project_size_increase);
 }
 
 function circle_size_increase(d){
-  // console.log(d3.event.transform);
-  // console.log(this);
-  // use THIS
-  //-21776
   var i = d3.interpolateNumber(2, 20);
   var x = (d3.event.transform.y * -1)-2000;
-  // console.log(x);
   if(x > 0){
     var t = x/21776;
-    // console.log(i(t));
     return i(t);
-    // console.log(d);
-    // return
   }
   return 2;
 }
 
+// Projects increase after zoom in factor X.
 function project_size_increase(d){
-  //-21776
   var city = d.survey_answers.location;
   var a = project_count_city[city];
-  var i = d3.interpolateNumber(3+a, 70);
+  var i = d3.interpolateNumber(3+a, 30*a);
   var x = (d3.event.transform.y * -1)-1000;
   if(x > 0){
     var t = x/21776;
     return i(t);
   }
-  var city = d.survey_answers.location;
-  var a = project_count_city[city];
   return 3 + a;
 }
 
+// Semantic transformation
 function circle_transform(t) {
   return function(d) {
-    // console.log(this.transform);
     var c = [this.getAttribute('cx'), this.getAttribute('cy')];
     var r = t.apply(c);
     var x = [r[0] - c[0], r[1]-c[1]];
-
     return "translate(" + x + ")";
   };
 }
 
-function project_transform(t) {
-  return function(d) {
-    // console.log(d);
-    // console.log(this);
-    // var c = project_coordinates[d.survey_answers.location];
-    // var r = projection([c.x, c.y]);
-    var r = [this.getAttribute('cx'), this.getAttribute('cy')];
-    var x = t.apply(r);
-    var a = [x[0] - r[0], x[1] - r[1]];
-
-    // console.log(d);
-
-    // console.log(this.classList);
-    // if(this.classList.contains("open")){
-    //   // console.log("H");
-    //   return d3.event.transform;
-    // }
-
-    // console.log(this);
-    // console.log(this.classList);
-
-    // console.log(c);
-    return "translate(" + a + ")";
-  };
-}
-
+// Loads the map
+// 4 Different d3 json components are loaded.
+// City Dots, Projects, Europe, Sweden.
 function load_map_components(){
-  // var q = d3.queue();
-  d3.json("data/cities_updated.json", function(error,data){
-    var up_d = [];
-    var t = 0;
-    for(var i = 0; i < data.length; i++){
-      if(data[i] != undefined){
-        up_d[t] = data[i];
-        t++;
-      }
-    }
-    cities = up_d;
-    cities_circles = cities_container.selectAll("circle")
-       .data(cities).enter()
-       .append("circle")
-       .attr("id",function(d){return"circle-"+d.id})
-       .attr("cx", function (d) { return projection([d.coordinates.x, d.coordinates.y])[0]; })
-       .attr("cy", function (d) { return projection([d.coordinates.x, d.coordinates.y])[1]; })
-       // .attr("cy","0")
-       // .attr("cx","0")
-       .attr("r", 2)
-       .style("stroke-width", .2)
-       .style("stroke", "#000")
-       .attr("fill", function(d){
-         // return "rgb(0,125,145)";
-         return "black";
-         // return "white";
-       })
-       .on("mouseover",handleMouseOverCircle)
-       .on("mouseout",handleMouseOutCircle);
 
+  d3.json("/data/cities.json", function(error,data){
+      cities = data;
+      cities_circles = cities_container.selectAll("circle")
+         .data(cities).enter()
+         .append("circle")
+         .attr("id",function(d){return"circle-"+d.id})
+         .attr("cx", function (d) { return projection([d.coordinates.x, d.coordinates.y])[0]; })
+         .attr("cy", function (d) { return projection([d.coordinates.x, d.coordinates.y])[1]; })
+         .attr("r", 2)
+         .attr("fill","black")
+         .on("mouseover",handleMouseOverCircle)
+         .on("mouseout",handleMouseOutCircle);
 
-       function handleMouseOverCircle(d){
-         tooltip.transition("check3").style("opacity", .9);
-         tooltip.html("<b>"+d.name + "</b>")
-           .style("left", (d3.event.pageX) + "px")
-           .style("top", (d3.event.pageY - 28) + "px")
-           .style("max-width",  200 + "px");
-       }
+         function handleMouseOverCircle(d){
+           tooltip.transition("tooltip-1").style("opacity", .9);
+           tooltip.html("<b>"+d.name + "</b>")
+             .style("left", (d3.event.pageX) + "px")
+             .style("top", (d3.event.pageY - 28) + "px")
+             .style("max-width",  200 + "px");
+         }
 
-       function handleMouseOutCircle(d){
-          tooltip.transition().style("opacity", 0);
-        }
+         function handleMouseOutCircle(d){
+            tooltip.transition().style("opacity", 0);
+          }
   });
-  d3.json("data/mock-data-v7.json", function(error,data){
+
+  // Mock Data loading!
+  d3.json("/data/mock-data-v7.json", function(error,data){
     mock_data = data.data;
-    console.log(data.data);
 
-
+    // Calculating # of projects per city.
     for(var i = 0; i < mock_data.length; i++){
       var city = mock_data[i].survey_answers.location;
       if(project_count_city[city] == undefined){
@@ -272,6 +227,7 @@ function load_map_components(){
         project_count_city[city] += 1;
       }
     }
+    // I don't remember if this is still used.
     for(var i = 0; i < mock_data.length; i ++){
       if(project_count_city[mock_data[i].survey_answers.location]>1){
         mock_data[i].survey_answers.group = 1;
@@ -292,15 +248,11 @@ function load_map_components(){
          return 3 + a;
        })
        .classed("bubble","true")
-       .style("stroke-width", 2)
-       // .style("stroke", "#000")
-       .style("stroke","#bb7b00")
-       .attr("fill", function(d){
-        // if(project_count_city[d.survey_answers.location]>1){
-        //   return "purple";
-        // }
-         return "#EA9A00";
-       })
+       .style("stroke-width", 1)
+       // .style("stroke","#d28a00")
+       // .attr("fill", "#EA9A00")
+       .style("stroke","#4ca4b2")
+       .attr("fill","#007d91")
        .on('click',handleClick)
        .on('mouseover',handleMouseOverCircle)
        .on('mouseout',handleMouseOutCircle);
@@ -381,31 +333,33 @@ function load_map_components(){
         tooltip2.transition("check").style("opacity", 0);
       }
   });
-  d3.json('data/europe.topo.json', function(error, europe){
+
+  // used to ensure Sweden loads ontop of Europe.
+  var q = d3.queue();
+  q.defer(d3.json, '/data/europe.topo.json');
+  q.defer(d3.json, '/data/sweden.topo.json');
+
+  q.awaitAll(function(error, data_list){
+    var europe = data_list[0];
+    var sweden = data_list[1];
+    // Europe
     g.selectAll(".continent_Europe_subunits")
       .data(topojson.feature(europe, europe.objects.europe).features)
         .enter().append("path")
-        .attr("class", function(d) {return "country-" + d.id;})
         .attr("d", path)
-        .attr("fill",function(d){
-          if(d.properties.NAME.match("Sweden")){
-            // return "#00A389";
-            return "grey";
-            // return "#669966";
-          }
-          // return "#cdc";
-          // return "#97C28E"
-          return "lightgrey";
-        });
-  // 
-  // g.insert("path", ".graticule")
-  // .datum(topojson.mesh(europe, europe.objects.europe, function(a, b) { return a !== b; }))
-  // .attr("class", "boundary")
-  // .attr("d", path);
-
+        .attr("fill",'lightgrey');
+    // Sweden
+    g.selectAll('.continent_Sweden_subnits')
+      .data(topojson.feature(sweden, sweden.objects.subunits).features)
+      .enter().append("path")
+      .attr("class", function(d) {return "country-" + d.id;})
+      .attr("d", path)
+      .attr("fill", 'grey');
   });
 }
 
+
+// These functions are defunct in final version.
 function hide_text(r){
   if(r==1){
     document.getElementById('multi-proj').style.display = "none";
@@ -428,9 +382,9 @@ function show_project(proj_id){
   document.getElementById('project_subtitle').innerHTML = d.survey_answers.project_type;
   document.getElementById('project_leader').innerHTML = d.survey_answers.project_organization;
   document.getElementById('budget').innerHTML = d.survey_answers.budget.funded;
-
 }
 
+// About box.
 var about_showed = 0;
 function toggle_about(a){
   if(a == 0){
@@ -469,13 +423,10 @@ window.addEventListener('click', function(e){
       // console.log(tooltip3_showed);
       if(tooltip3_showed == 2){
         tooltip3.transition("check2").style("opacity", 0);
-
         tooltip3_showed = 0;
       }
       if(tooltip3_showed == 1){
         tooltip3_showed = 2;
-
       }
     }
-
 });

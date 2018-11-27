@@ -2,6 +2,7 @@ var width = 1300;
 var height = 400;
 
 
+// Titles displayed
 var omrade_titles = {
   0: "Civilsamhälle",
   1: "Forskning",
@@ -9,6 +10,7 @@ var omrade_titles = {
   3: "Offentlig verksamhet"
 };
 
+// Convertion of title to id.
 var q_o = {
    "Civilsamhälle" : 0,
    "Forskning" : 1,
@@ -16,18 +18,22 @@ var q_o = {
    "Offentlig verksamhet": 3
 }
 
+// Hover title.
 var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip_bubble")
     .style("opacity", 0);
 
+// Locations of sections on screen
 var omradeCenters = {
   0: { x: width / 3, y: height / 2 },
   1: { x: width / 2, y: height / 2 },
   2: { x: 2 * width / 3, y: height / 2 },
   3: { x:250, y:0}
 };
+// Center of screen
 var center = { x: width / 2, y: height / 2 };
 
+// Hardcoded section titles
 var omrade_titles_x = {
     3: 210,
     0: 415,
@@ -41,6 +47,11 @@ var omrade_titles_y = {
   2:50
 };
 
+// Location on screen
+var projectSpace = {
+  0 : 415,
+  1 : 730
+};
 
 var projspace_title_x = {
   0: 410,
@@ -52,16 +63,13 @@ var projspace_title_y = {
   1: 100
 };
 
-var projectSpace = {
-  0 : 415,
-  1 : 730
-};
-
+// Names of all projects in one object.
 var projspace_title = {};
 
+// Currently selected project
 var project_no = -1;
-var bubbles = null;
-var nodes;
+var bubbles = null;   // Bubbles in object.
+var nodes;            // Bubbles as nodes.
 var zoom = d3.zoom()
     .scaleExtent([.2, 20])
     .on("zoom", zoomed);
@@ -75,10 +83,10 @@ var g = svg.append("g");
 var view_option = 0;
 
 svg.call(zoom);
+
 function zoomed() {
   g.attr("transform", d3.event.transform);
 }
-
 
 // sim
 var forceStrength = 0.025;
@@ -89,24 +97,24 @@ var simulation = d3.forceSimulation()
   .force('charge', d3.forceManyBody().strength(charge))
   .on('tick', ticked);
 
-  simulation.stop();
+simulation.stop();
 
-  // Moving
-  function charge(d) {
-    // 2.15 works well
-    return -Math.pow(d.radius, 2.0) * forceStrength;
-  }
+// Moving
+function charge(d) {
+  // 2.15 works well
+  return -Math.pow(d.radius, 2.0) * forceStrength;
+}
 
-  function ticked() {
-  bubbles
-    .attr('cx', function (d) { return d.x; })
-    .attr('cy', function (d) { return d.y; });
+function ticked() {
+bubbles
+  .attr('cx', function (d) { return d.x; })
+  .attr('cy', function (d) { return d.y; });
 }
 
 
+// Node remapping and creation
 function createNewNodes(rawData){
   var myNodes = rawData.map(function (d,i){
-    // console.log(d);
     return {
       id: (i),
       radius : 15,
@@ -122,12 +130,7 @@ function createNewNodes(rawData){
   return myNodes;
 }
 
-function convert_omrade(q_id){
-  return q_o[q_id];
-}
-
-
-
+// Draws the chart.
 function chart(rawData) {
   var maxAmount = d3.max(rawData, function (d) { return +d.total_amount; });
 
@@ -136,17 +139,17 @@ function chart(rawData) {
     .range([2, 85])
     .domain([0, maxAmount]);
   nodes = createNewNodes(rawData);
-  console.log(nodes);
   bubbles = g.selectAll('.bubble')
     .data(nodes, function (d) { return d.id; });
 
   var bubblesE = bubbles.enter().append('circle')
     .classed('bubble', true)
     .attr('r', 0)
-    .style("stroke","black")
+    // .style("stroke","black")
     .style("fill",function(d){ return mote_color(d);})
     // .attr
-    .attr('stroke-width', .2)
+    .attr('stroke-width', .5)
+    .attr('stroke',function(d){return helix_colors_borders[d.kategori]})
     // .attr('box-shadow','2px 2px')
     .on("mouseover",handleMouseOverCircle)
     .on("mouseout",handleMouseOutCircle);
@@ -165,6 +168,8 @@ function chart(rawData) {
   create_omrade_titles();
   create_project_titles();
 
+
+  // Move legedn elsewhere.
   create_legend();
 
   function handleMouseOverCircle(d){
@@ -202,6 +207,7 @@ function move_bubbles(opt){
   toggle_title();
 }
 
+//TODO: Jquery
 function change_view(option){
   $("#view_"+view_option).removeClass("active");
   $("#view_"+option).addClass("active");
@@ -209,17 +215,17 @@ function change_view(option){
   move_bubbles(option);
 }
 
+function convert_omrade(q_id){
+  return q_o[q_id];
+}
 function omrade_view(d){
   return omradeCenters[d.kategori].x;
 }
 
 function project_view(d){
-  // console.log(d);
   var projs = d.projects;
-  // console.log(projs);
   for(var i = 0; i< projs.length; i++){
     if(projs[i] == project_no){
-      // console.log("check");
       return projectSpace[1];
     }
   }
@@ -229,7 +235,7 @@ function project_view(d){
 function start_program(){
   var q = d3.queue();
   q.defer(d3.json, "data.json");
-  q.defer(d3.json, "mock-data-v7.json");
+  q.defer(d3.json, "/data/mock-data-v7.json");
 
   q.awaitAll(function(error, data_list){
     if(error) throw error;
@@ -311,30 +317,30 @@ function toggle_title(){
   }
 }
 
+var helix_colors = {
+  0 : "#007d91",
+  1 : "#EA9A00",
+  2 : "#00A389",
+  3 : "#97C28E"
+}
+
+var helix_colors_borders = {
+  0 : "#007082",
+  1 : "#d28a00",
+  2 : "#00927b",
+  3 : "#87ae7f"
+}
+
 function mote_color(d){
-  if(d.kategori == 0){
-    return "rgb(0,125,145)";
-  } else if (d.kategori == 1){
-    return "#EA9A00";
-  } else if (d.kategori == 2){
-    return "#00A389";
-  } else if (d.kategori == 3){
-    return "#97C28E";
+  if(1 == 1) {
+    return helix_colors[d.kategori];
   }
-  return "black";
 }
 
 function legend_color(d){
-  if(d == 0){
-    return "rgb(0,125,145)";
-  } else if (d == 1){
-    return "#EA9A00";
-  } else if (d == 2){
-    return "#00A389";
-  } else if (d == 3){
-    return "#97C28E";
+  if(1 == 1) {
+    return helix_colors[d];
   }
-  return "black";
 }
 
 function create_legend(){
@@ -361,6 +367,7 @@ function create_legend(){
     .classed('legend_rect','true');
     // .text("hello");
     xt.enter().append('text')
+    // This is gross.
     .attr('x', function(d){
       if(d == 0){
         return (d*width_s) + extra_width + 92;
@@ -378,10 +385,5 @@ function create_legend(){
       return omrade_titles[d];
     });
 }
-
-// <div class="legend">
-//   <rect></rect>
-// </div>
-
 
 start_program();
